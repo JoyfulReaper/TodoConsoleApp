@@ -1,4 +1,4 @@
-﻿namespace TodoConsoleApp.Common
+﻿namespace TodoConsoleApp.Models
 
 open System
 
@@ -63,14 +63,3 @@ module User =
 
     let create fieldName v =
         ConstrainedType.createString fieldName User 50 v
-
-
-
-type Todo =
-    {
-        TodoId : int
-        Title : string
-        Description : string option
-        User: string
-        DateCompleted : Nullable<DateTime>
-    }
