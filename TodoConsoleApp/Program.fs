@@ -1,4 +1,5 @@
 ﻿open System
+open TodoConsoleApp.Models
 
 let debug = true
 
@@ -21,6 +22,16 @@ let parseArgs (args : string array) =
     | _ ->
         match args.[0].ToUpper() with
         | "ADD" ->
+            //let todo =
+            //    {
+            //        TodoId = TodoId.create "TodoId" 0
+            //        Title = args.[1]
+            //        Description = args.[2]
+            //        User = args.[3]
+            //        DateCompleted = None
+            //    }
+            //let action = Add 
+            //action
             showHelp ()
         | "EDIT" ->
             showHelp ()

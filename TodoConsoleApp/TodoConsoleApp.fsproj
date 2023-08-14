@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Result.fs" />
     <Compile Include="Todo.SimpleTypes.fs" />
     <Compile Include="Todo.Models.fs" />
     <Compile Include="Program.fs" />

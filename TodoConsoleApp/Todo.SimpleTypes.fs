@@ -50,16 +50,22 @@ module TodoId =
     let value (TodoId id) = id
 
     let create fieldName v =
-        ConstrainedType.createInt fieldName TodoId 1 Int32.MaxValue v
+        ConstrainedType.createInt fieldName TodoId 0 Int32.MaxValue v
 
 module Description =
     let value (Description desc) = desc
 
     let create fieldName v =
-        ConstrainedType.createString fieldName Description 100 v
+        ConstrainedType.createStringOption fieldName Description 100 v
 
 module User =
     let value (User user) = User
 
     let create fieldName v =
         ConstrainedType.createString fieldName User 50 v
+
+module Title =
+    let value (Title title) = Title
+
+    let create fieldName v =
+        ConstrainedType.createString fieldName Title 30 v
