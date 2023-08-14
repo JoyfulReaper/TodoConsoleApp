@@ -2,6 +2,14 @@
 
 open System
 
+type UnvalidatedTodo = {
+    TodoId : int
+    Title : string
+    Description : string
+    User : string
+    DateCompleted : Nullable<DateTime>
+}
+
 // Simple Types and constrained types
 
 type TodoId = private TodoId of int
@@ -25,14 +33,14 @@ module ConstrainedType =
         else
             Ok (ctor str)
 
-    let createStringOption fieldName ctor maxLen str =
-        if String.IsNullOrEmpty (str) then
+    let createStringOption fieldName ctor maxLen str = 
+        if String.IsNullOrEmpty(str) then
             Ok None
         elif str.Length > maxLen then
-            let msg = sprintf "%s must not be more than %i characters" fieldName maxLen
-            Error msg
+            let msg = sprintf "%s must not be more than %i characters" fieldName maxLen 
+            Error msg 
         else
-            Ok (ctor |> Some)
+            Ok (ctor str |> Some)
 
     let createInt fieldName ctor minVal maxVal i =
         if i < minVal then
@@ -68,4 +76,4 @@ module Title =
     let value (Title title) = Title
 
     let create fieldName v =
-        ConstrainedType.createString fieldName Title 30 v
+        ConstrainedType.createString fieldName Title 3 v // TODO set back to 30 when done testing

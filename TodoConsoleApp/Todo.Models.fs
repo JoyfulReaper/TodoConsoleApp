@@ -19,3 +19,5 @@ type TodoAction =
     | Show of TodoId
     | ShowAll
     | Help
+
+type ValidationError = ValidationError of string

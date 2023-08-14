@@ -5,48 +5,79 @@ let debug = true
 
 let showHelp () =
     printfn "ConsoleTodoApp Help"
-    printfn "Add [title] {description} [user]"
-    printfn "Edit [Id] [title] {description} [user]"
-    printfn "Complete [Id]"
-    printfn "ClearAll"
-    printfn "Show [Id]"
-    printfn "ShowAll"
+    printfn "Add Todo: /a [Title] [Description] [user]"
+    printfn "Edit Todo: /e [Id] [title] {description} [user]"
+    printfn "Complete Todo: /m [Id]"
+    printfn "Clear All Todos: /c"
+    printfn "Show Todo: /s [Id]"
+    printfn "Show All Todos /s"
 
-let parseArgs (args : string array) =
-    if debug then
-        Array.iter (fun a -> printf "%O " a) args
+let validateTodo (unvalidatedTodo : UnvalidatedTodo) =
+    result {
+        let! todoId = 
+            unvalidatedTodo.TodoId
+            |> TodoId.create "TodoId"
+        let! title =
+            unvalidatedTodo.Title
+            |> Title.create "Title"
+        let! desc =
+            unvalidatedTodo.Description
+            |> Description.create "Description"
+        let! user =
+            unvalidatedTodo.User
+            |> User.create "User"
+        
+        return {
+            TodoId = todoId
+            Title = title
+            Description = desc
+            User = user
+            DateCompleted = None
+        }
+    }
 
-    match args.Length with
-    | 0 ->
-        printfn "No option was given. Use help for help!"
-    | _ ->
-        match args.[0].ToUpper() with
-        | "ADD" ->
-            //let todo =
-            //    {
-            //        TodoId = TodoId.create "TodoId" 0
-            //        Title = args.[1]
-            //        Description = args.[2]
-            //        User = args.[3]
-            //        DateCompleted = None
-            //    }
-            //let action = Add 
-            //action
-            showHelp ()
-        | "EDIT" ->
-            showHelp ()
-        | "MARKDONE" ->
-            showHelp ()
-        | "CLEARALL" ->
-            showHelp ()
-        | "SHOW" ->
-            showHelp ()
-        | "HELP" ->
-            showHelp ()
-        | _ ->
-            printfn "Invalid Option!"
+
+//let parseTodo (args : string array) =
+//    result {
+//        let unvalidatedTodo : UnvalidatedTodo =
+//            {
+//                TodoId = 0
+//                Title = args[1]
+//                Description = args[2]
+//                User = args[3]
+//                DateCompleted = Nullable()
+//            }
+
+//        let! todo =
+//            unvalidatedTodo 
+//            |> validateTodo
+//            |> Result.mapError ValidationError
+
+//        let action = Add todo
+//        return action
+//    }
+
 
 [<EntryPoint>]
 let main args =
-    parseArgs args
+    let test = List.ofArray args |> CommandLineParser.parseCommandLine 
+
+    match test.Action with
+    | CommandLineParser.Add ->
+        printfn "Add"
+    | CommandLineParser.Edit ->
+        printfn "Edit"
+    | CommandLineParser.MarkDone ->
+        printfn "MarkDone"
+    | CommandLineParser.ClearAll ->
+        printfn "ClearAll"
+    | CommandLineParser.Show ->
+        printfn "Show"
+    | CommandLineParser.ShowAll ->
+        printfn "ShowAll"
+    | CommandLineParser.Help ->
+        printfn "Help"
+
+    
+    //parseArgs args
     0
