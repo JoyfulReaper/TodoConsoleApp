@@ -10,6 +10,7 @@
     <Compile Include="Todo.SimpleTypes.fs" />
     <Compile Include="Todo.Models.fs" />
     <Compile Include="CommandLineParser.fs" />
+    <Compile Include="Todo.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

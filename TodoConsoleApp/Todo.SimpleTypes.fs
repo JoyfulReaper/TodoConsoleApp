@@ -76,4 +76,4 @@ module Title =
     let value (Title title) = Title
 
     let create fieldName v =
-        ConstrainedType.createString fieldName Title 3 v // TODO set back to 30 when done testing
+        ConstrainedType.createString fieldName Title 30 v

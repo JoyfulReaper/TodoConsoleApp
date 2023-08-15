@@ -1,5 +1,6 @@
 ﻿open System
 open TodoConsoleApp.Models
+open Todo
 
 let debug = true
 
@@ -11,6 +12,7 @@ let showHelp () =
     printfn "Clear All Todos: /c"
     printfn "Show Todo: /s [Id]"
     printfn "Show All Todos /s"
+    printfn "Help: /h"
 
 let validateTodo (unvalidatedTodo : UnvalidatedTodo) =
     result {
@@ -35,27 +37,6 @@ let validateTodo (unvalidatedTodo : UnvalidatedTodo) =
             DateCompleted = None
         }
     }
-
-
-//let parseTodo (args : string array) =
-//    result {
-//        let unvalidatedTodo : UnvalidatedTodo =
-//            {
-//                TodoId = 0
-//                Title = args[1]
-//                Description = args[2]
-//                User = args[3]
-//                DateCompleted = Nullable()
-//            }
-
-//        let! todo =
-//            unvalidatedTodo 
-//            |> validateTodo
-//            |> Result.mapError ValidationError
-
-//        let action = Add todo
-//        return action
-//    }
 
 
 [<EntryPoint>]
@@ -88,10 +69,30 @@ let main args =
         |> Result.mapError ValidationError
 
     match validatedTodo with
-    | Ok _ ->
+    | Ok todo ->
         printfn "Ok"
+
+        match commandLineOptions.Action with
+        | CommandLineParser.Add ->
+            addTodo todo
+        | CommandLineParser.Edit ->
+            editTodo todo
+        | CommandLineParser.MarkDone ->
+            markDone todo.TodoId
+        | CommandLineParser.ClearAll ->
+            clearAll ()
+        | CommandLineParser.Show ->
+            show todo.TodoId
+        | CommandLineParser.ShowAll ->
+            showAll ()
+        | _ ->
+            showHelp ()
+
     | Error (ValidationError error) ->
         printfn "Error: %s" error
+        System.Environment.Exit 1
+
+
 
     //parseArgs args
     0
