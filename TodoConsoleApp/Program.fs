@@ -2,7 +2,6 @@
 open TodoConsoleApp.Models
 open Todo
 
-let debug = true
 
 let showHelp () =
     printfn "ConsoleTodoApp Help"
@@ -47,53 +46,60 @@ let main args =
         List.ofArray args 
         |> CommandLineParser.parseCommandLine 
 
-    if debug then
-        match commandLineOptions.Action with
-        | CommandLineParser.Add ->
-            printfn "Add"
-        | CommandLineParser.Edit ->
-            printfn "Edit"
-        | CommandLineParser.MarkDone ->
-            printfn "MarkDone"
-        | CommandLineParser.ClearAll ->
-            printfn "ClearAll"
-        | CommandLineParser.Show ->
-            printfn "Show"
-        | CommandLineParser.ShowAll ->
-            printfn "ShowAll"
-        | CommandLineParser.Help ->
-            printfn "Help"
+    match commandLineOptions.Action with
+    | CommandLineParser.Add ->
+        let todo = 
+            commandLineOptions
+            |> CommandLineParser.toUnvalidatedTodo
+            |> validateTodo
+            |> Result.mapError ValidationError
 
-    let unvalidatedTodo = 
-        CommandLineParser.toUnvalidatedTodo commandLineOptions
-
-    let validatedTodo = 
-        unvalidatedTodo
-        |> validateTodo
-        |> Result.mapError ValidationError
-
-    match validatedTodo with
-    | Ok todo ->
-        printfn "Ok"
-
-        match commandLineOptions.Action with
-        | CommandLineParser.Add ->
+        match todo with
+        | Ok todo ->
             addTodo todo
-        | CommandLineParser.Edit ->
+        | Error _ ->
+            showHelp ()
+    | CommandLineParser.Edit ->
+        let todo = 
+            commandLineOptions
+            |> CommandLineParser.toUnvalidatedTodo
+            |> validateTodo
+            |> Result.mapError ValidationError
+
+        match todo with
+        | Ok todo ->
             editTodo todo
-        | CommandLineParser.MarkDone ->
-            markDone todo.TodoId
-        | CommandLineParser.ClearAll ->
-            clearAll ()
-        | CommandLineParser.Show ->
-            show todo.TodoId
-        | CommandLineParser.ShowAll ->
-            showAll ()
-        | _ ->
+        | Error _ ->
+            showHelp ()
+    | CommandLineParser.MarkDone ->
+        let todoId = 
+            commandLineOptions.TodoId
+            |> TodoId.create "TodoId"
+            |> Result.mapError ValidationError
+
+        match todoId with
+        | Ok todoId ->
+            markDone todoId
+        | Error _ ->
             showHelp ()
 
-    | Error (ValidationError error) ->
-        printfn "Error: %s" error
-        System.Environment.Exit 1
+    | CommandLineParser.ClearAll ->
+        clearAll ()
+    | CommandLineParser.Show ->
+        let todoId = 
+            commandLineOptions.TodoId
+            |> TodoId.create "TodoId"
+            |> Result.mapError ValidationError
+
+        match todoId with
+        | Ok todoId ->
+            show todoId
+        | Error _ ->
+            showHelp ()
+    | CommandLineParser.ShowAll ->
+        showAll()
+    | CommandLineParser.Help ->
+        showHelp()
+
 
     exitcode
