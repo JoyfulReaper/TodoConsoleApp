@@ -41,7 +41,11 @@ let validateTodo (unvalidatedTodo : UnvalidatedTodo) =
 
 [<EntryPoint>]
 let main args =
-    let commandLineOptions = List.ofArray args |> CommandLineParser.parseCommandLine 
+    let exitcode = 0
+
+    let commandLineOptions =
+        List.ofArray args 
+        |> CommandLineParser.parseCommandLine 
 
     if debug then
         match commandLineOptions.Action with
@@ -92,7 +96,4 @@ let main args =
         printfn "Error: %s" error
         System.Environment.Exit 1
 
-
-
-    //parseArgs args
-    0
+    exitcode
