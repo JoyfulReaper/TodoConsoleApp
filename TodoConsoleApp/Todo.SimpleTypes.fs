@@ -77,3 +77,4 @@ module Title =
 
     let create fieldName v =
         ConstrainedType.createString fieldName Title 30 v
+

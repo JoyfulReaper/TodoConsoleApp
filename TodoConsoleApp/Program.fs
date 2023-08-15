@@ -1,6 +1,7 @@
 ﻿open System
 open TodoConsoleApp.Models
 open Todo
+open Validation
 
 
 let showHelp () =
@@ -12,30 +13,6 @@ let showHelp () =
     printfn "Show Todo: /s [Id]"
     printfn "Show All Todos /s"
     printfn "Help: /h"
-
-let validateTodo (unvalidatedTodo : UnvalidatedTodo) =
-    result {
-        let! todoId = 
-            unvalidatedTodo.TodoId
-            |> TodoId.create "TodoId"
-        let! title =
-            unvalidatedTodo.Title
-            |> Title.create "Title"
-        let! desc =
-            unvalidatedTodo.Description
-            |> Description.create "Description"
-        let! user =
-            unvalidatedTodo.User
-            |> User.create "User"
-        
-        return {
-            TodoId = todoId
-            Title = title
-            Description = desc
-            User = user
-            DateCompleted = None
-        }
-    }
 
 
 [<EntryPoint>]
@@ -57,7 +34,7 @@ let main args =
         match todo with
         | Ok todo ->
             addTodo todo
-        | Error _ ->
+        | Error e ->
             showHelp ()
     | CommandLineParser.Edit ->
         let todo = 

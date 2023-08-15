@@ -1,6 +1,4 @@
-﻿// https://fsharpforfunandprofit.com/posts/pattern-matching-command-line/
-
-module CommandLineParser 
+﻿module CommandLineParser 
     open System
     open TodoConsoleApp.Models
 
@@ -32,7 +30,7 @@ module CommandLineParser
 
     let parseCommandLine args =
         match args with
-        | "/a"::title::description::user::xs ->
+        | "/a"::title::description::user::_ ->
             let commandLineOptions = {
                 TodoId = 0
                 Action = Add
@@ -42,7 +40,7 @@ module CommandLineParser
             }
             commandLineOptions
 
-        | "/e"::todoId::title::description::user::xs ->
+        | "/e"::todoId::title::description::user::_ ->
             let commandLineOptions = {
                     TodoId = int todoId
                     Action = Edit
@@ -52,7 +50,7 @@ module CommandLineParser
             }
             commandLineOptions
 
-        | "/m"::todoId::xs  ->
+        | "/m"::todoId::_  ->
             let commandLineOptions = {
                     TodoId = int todoId
                     Action = MarkDone
@@ -62,7 +60,7 @@ module CommandLineParser
             }
             commandLineOptions
 
-        | "/c"::xs  ->
+        | "/c"::_  ->
             let commandLineOptions = {
                     TodoId = 0
                     Action = ClearAll
@@ -72,7 +70,7 @@ module CommandLineParser
             }
             commandLineOptions
 
-        | "/s"::todoId::xs  ->
+        | "/s"::todoId::_  ->
             let commandLineOptions = {
                     TodoId = int todoId
                     Action = Show
@@ -82,7 +80,7 @@ module CommandLineParser
             }
             commandLineOptions
 
-        | "/s"::xs  ->
+        | "/s"::_  ->
             let commandLineOptions = {
                     TodoId = 0
                     Action = ShowAll
