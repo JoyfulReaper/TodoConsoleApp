@@ -60,24 +60,38 @@ let validateTodo (unvalidatedTodo : UnvalidatedTodo) =
 
 [<EntryPoint>]
 let main args =
-    let test = List.ofArray args |> CommandLineParser.parseCommandLine 
+    let commandLineOptions = List.ofArray args |> CommandLineParser.parseCommandLine 
 
-    match test.Action with
-    | CommandLineParser.Add ->
-        printfn "Add"
-    | CommandLineParser.Edit ->
-        printfn "Edit"
-    | CommandLineParser.MarkDone ->
-        printfn "MarkDone"
-    | CommandLineParser.ClearAll ->
-        printfn "ClearAll"
-    | CommandLineParser.Show ->
-        printfn "Show"
-    | CommandLineParser.ShowAll ->
-        printfn "ShowAll"
-    | CommandLineParser.Help ->
-        printfn "Help"
+    if debug then
+        match commandLineOptions.Action with
+        | CommandLineParser.Add ->
+            printfn "Add"
+        | CommandLineParser.Edit ->
+            printfn "Edit"
+        | CommandLineParser.MarkDone ->
+            printfn "MarkDone"
+        | CommandLineParser.ClearAll ->
+            printfn "ClearAll"
+        | CommandLineParser.Show ->
+            printfn "Show"
+        | CommandLineParser.ShowAll ->
+            printfn "ShowAll"
+        | CommandLineParser.Help ->
+            printfn "Help"
 
-    
+    let unvalidatedTodo = 
+        CommandLineParser.toUnvalidatedTodo commandLineOptions
+
+    let validatedTodo = 
+        unvalidatedTodo
+        |> validateTodo
+        |> Result.mapError ValidationError
+
+    match validatedTodo with
+    | Ok _ ->
+        printfn "Ok"
+    | Error (ValidationError error) ->
+        printfn "Error: %s" error
+
     //parseArgs args
     0

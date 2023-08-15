@@ -2,6 +2,7 @@
 
 module CommandLineParser 
     open System
+    open TodoConsoleApp.Models
 
     type Action =
         | Add
@@ -19,6 +20,15 @@ module CommandLineParser
         User : string
         Action: Action
     }
+
+    let toUnvalidatedTodo (commandLineOptions : CommandLineOptions) : UnvalidatedTodo =
+        {
+            TodoId = commandLineOptions.TodoId
+            Title = commandLineOptions.Title
+            Description = commandLineOptions.Description
+            User = commandLineOptions.User
+            DateCompleted = Nullable()
+        }
 
     let parseCommandLine args =
         match args with
