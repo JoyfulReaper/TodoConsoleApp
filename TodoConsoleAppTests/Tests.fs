@@ -2,17 +2,17 @@ namespace TodoConsoleAppTests
 
 open System
 open Microsoft.VisualStudio.TestTools.UnitTesting
-open TodoConsoleApp.CvsTodoRepository
+open TodoConsoleApp.CsvTodoRepository
 open TodoConsoleApp.Models
 
 [<TestClass>]
 type TestClass () =
 
-    let getTodo () : Result<Todo, string> =
+    let getSampleTodo () : Result<Todo, string> =
         result {
             let! todoId = TodoId.create "todoId" 1
             let! title = Title.create "title" "Do the dishes"
-            let! description = Description.create "description" "Wash the dished with warm soapy water, then rinse them, then dry them"
+            let! description = Description.create "description" "Wash the dishes with warm soapy water, then rinse them, then dry them"
             let! user = User.create "user" "Kyle"
 
             return 
@@ -26,8 +26,16 @@ type TestClass () =
         }
 
     [<TestMethod>]
+    member this.CanReplaceCommas () =
+        let test =
+            replaceCommas "Do the dishes, then dry them" "|;|"
+
+        Assert.AreEqual("Do the dishes|;| then dry them", test)
+
+
+    [<TestMethod>]
     member this.CanInsertTodo () =
-        let todo = getTodo ()
+        let todo = getSampleTodo ()
             
         match todo with
         | Ok todoValue ->
@@ -37,4 +45,14 @@ type TestClass () =
             Assert.Fail(errorMsg)
 
         Assert.IsTrue(false)
+
+    [<TestMethod>]
+    member this.CanGetTodo () =
+        let todo = getTodo 1
+
+        Assert.IsTrue(todo.IsSome)
+        let todoValue = todo.Value
+
+        Assert.AreEqual(1, todoValue.TodoId |> TodoId.value)
+        
         

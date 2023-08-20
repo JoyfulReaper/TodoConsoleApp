@@ -67,13 +67,13 @@ module Description =
         ConstrainedType.createStringOption fieldName Description 100 v
 
 module User =
-    let value (User user) = User
+    let value (User user) = user
 
     let create fieldName v =
         ConstrainedType.createString fieldName User 50 v
 
 module Title =
-    let value (Title title) = Title
+    let value (Title title) = title
 
     let create fieldName v =
         ConstrainedType.createString fieldName Title 30 v
