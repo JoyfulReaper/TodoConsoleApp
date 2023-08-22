@@ -8,10 +8,10 @@ open TodoConsoleApp.Models
 [<TestClass>]
 type TestClass () =
 
-    let getSampleTodo () : Result<Todo, string> =
+    let getSampleTodo title : Result<Todo, string> =
         result {
             let! todoId = TodoId.create "todoId" 1
-            let! title = Title.create "title" "Do the dishes"
+            let! title = Title.create "title" title
             let! description = Description.create "description" "Wash the dishes with warm soapy water, then rinse them, then dry them"
             let! user = User.create "user" "Kyle"
 
@@ -35,11 +35,11 @@ type TestClass () =
 
     [<TestMethod>]
     member this.CanInsertTodo () =
-        let todo = getSampleTodo ()
+        let todo = getSampleTodo "Sample Title"
             
         match todo with
         | Ok todoValue ->
-            insertTodo todoValue |> Async.RunSynchronously
+            insertTodo todoValue 
             Assert.IsTrue(false)
         | Error errorMsg ->
             Assert.Fail(errorMsg)
@@ -54,5 +54,3 @@ type TestClass () =
         let todoValue = todo.Value
 
         Assert.AreEqual(1, todoValue.TodoId |> TodoId.value)
-        
-        
