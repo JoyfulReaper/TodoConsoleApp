@@ -12,8 +12,8 @@
     <Compile Include="Todo.Models.fs" />
     <Compile Include="Validation.fs" />
     <Compile Include="CommandLineParser.fs" />
-    <Compile Include="Todo.fs" />
     <Compile Include="CvsTodoRepository.fs" />
+    <Compile Include="Todo.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

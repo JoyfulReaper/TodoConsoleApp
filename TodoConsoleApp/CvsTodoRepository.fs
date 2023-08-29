@@ -68,6 +68,17 @@ let parseTodoRow (csvRow : string) : Result<UnvalidatedTodo, CsvRepositoryError>
     | _ -> 
         Error <| CsvRepositoryError "Failed to parse row"
     
+
+let readFile (path: string) =
+    try
+        seq {
+            use reader = new StreamReader(File.OpenRead(csvFile))
+            while not reader.EndOfStream do
+                reader.ReadLine()
+        } |> Ok
+    with
+    | ex -> Error ex
+
 // Get the next id for a new todo
 let getNextId () =
     let allLines = File.ReadAllLines(csvFile)
@@ -110,8 +121,6 @@ let getTodo (id : int) : Todo option =
                 loop ()
 
     loop ()
-
-
 
 /// Insert a new todo
 let insertTodo (todo : Todo) =
